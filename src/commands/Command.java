@@ -42,10 +42,10 @@ public class Command{
 				// COMMAND CONTAINS '/'
 				String[] parts = cmd.split("/");
 				if ( parts[0].equals("CONNECT") ){
-					parseArgs(parts, CmdType.CONNECT, 2);
+					parseArgs(parts, CmdType.CONNECT, 1);
 					LOGGER.finest("Connect detected ");
 				}else if ( parts[0].equals("EXIT") ){
-					parseArgs(parts, CmdType.EXIT, 2);
+					parseArgs(parts, CmdType.EXIT, 1);
 					LOGGER.finest("Malformed ");
 				}
 			}

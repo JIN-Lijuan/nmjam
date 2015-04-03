@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
+import commands.CmdType;
+
+import commands.Command;
 
 
 public class EchoThread extends Thread {
@@ -27,13 +30,21 @@ public class EchoThread extends Thread {
 			DataOutputStream out =  
 					new DataOutputStream(cl.getOutputStream());
 			
-			out.writeChars("Nickname: ");
-			String input = in.readLine();
-			nickname = input;
-			out.writeChars("Bonjour " + nickname + "\n");
-			ci.setNickname(nickname);
+			out.writeChars("Waiting for something to do:\n");
+			String input;
 			while( !(input = in.readLine()).equals("exit")){
-				dispatcher.send_message(input);
+				Command cmd = new Command(input);
+				switch( cmd.getType() ){
+					case CONNECT:
+						out.writeChars("Connecting...\n");
+						break;
+					case EXIT:
+						out.writeChars("EXIT...\n");
+						break;
+					case MALFORMED:
+						out.writeChars(cmd.getError());
+					break;
+				}
 				
 			}
 			cl.close();

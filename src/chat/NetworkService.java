@@ -24,15 +24,16 @@ class NetworkService implements Runnable {
 	private final static Logger LOGGER = 
 			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-
+	//TODO: empecher le bloque du port
 	public NetworkService(int port, int poolSize){
 		this.isStopped = false;
 		this.port = port;
+		//TODO: Déplacer l'init hors du constructeur
 		try {
 			this.serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
 			LOGGER.severe("Cannot open server socket on port " + port);
-
+			
 		}
 
 		pool = Executors.newFixedThreadPool(poolSize);
