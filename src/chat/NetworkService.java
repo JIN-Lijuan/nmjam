@@ -11,6 +11,7 @@ class NetworkService implements Runnable {
 	private ServerSocket serverSocket;
 	private final ExecutorService pool;
 	private int port;
+	private boolean isStopped;
 	Dispatcher dispatcher = new Dispatcher();
 
 	// Server logger
@@ -19,6 +20,7 @@ class NetworkService implements Runnable {
 
 
 	public NetworkService(int port, int poolSize){
+		this.isStopped = false;
 		this.port = port;
 		try {
 			this.serverSocket = new ServerSocket(port);
@@ -38,7 +40,7 @@ class NetworkService implements Runnable {
 	public void run() { 
 		// run the service
 		try {
-			for (;;) {
+			while(! isStopped()){ 
 				// Client socket
 				Socket cl = serverSocket.accept();
 				LOGGER.info("Ceonnection accepted from " + 
@@ -51,24 +53,31 @@ class NetworkService implements Runnable {
 				LOGGER.finest("Thread added to ThreadPool");
 
 			}
-		} catch (IOException ex) {
-			pool.shutdown();
-
-		}
-	}
-
-	public synchronized void  shutDown(){
-		LOGGER.info("Server is shutting down");
-		LOGGER.finest("Shutting down ThreadPool");
-		pool.shutdown();
-		LOGGER.finest("Shutting down ServerSocket");
-		try {
-			serverSocket.close();
-		} catch (IOException e) {
-			LOGGER.severe("Cannot close ServerSocket" + e.getMessage());
-
+			} catch (IOException e) {
+				pool.shutdown();
+				LOGGER.severe("Cannot accept connection" + e.getMessage());
+			}
 		}
 
+		private synchronized boolean isStopped() {
+			return this.isStopped;
+			
+		}
+
+		public synchronized void stop(){
+			this.isStopped = true;
+			LOGGER.info("Stopping Server.");
+			
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				LOGGER.severe("Cannot close ServerSocket" + e.getMessage());
+
+			}
+		}
+
+
+
+
 	}
-}
 
