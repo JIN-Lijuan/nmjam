@@ -7,6 +7,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+/**
+ * Cette classe contien la socket du serveur et le Pool de
+ * Threads.
+ * @author Giuseppe FEDERICO
+ *
+ */
 class NetworkService implements Runnable {
 	private ServerSocket serverSocket;
 	private final ExecutorService pool;
