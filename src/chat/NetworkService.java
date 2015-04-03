@@ -41,43 +41,41 @@ class NetworkService implements Runnable {
 		// run the service
 		try {
 			while(! isStopped()){ 
-				// Client socket
+				LOGGER.info("Waiting for connections.");
 				Socket cl = serverSocket.accept();
 				LOGGER.info("Ceonnection accepted from " + 
 						cl.getInetAddress() +
-						"on port" +
-						cl.getPort());
+						" on port " +
+						serverSocket.getLocalPort());
 
 				dispatcher.addClient(cl);
 				pool.execute(new EchoThread(cl, dispatcher));
 				LOGGER.finest("Thread added to ThreadPool");
 
 			}
-			} catch (IOException e) {
-				pool.shutdown();
-				LOGGER.severe("Cannot accept connection" + e.getMessage());
-			}
+		} catch (IOException e) {
+			pool.shutdown();
+			LOGGER.severe("Cannot accept connection" + e.getMessage());
 		}
+	}
 
-		private synchronized boolean isStopped() {
-			return this.isStopped;
-			
-		}
-
-		public synchronized void stop(){
-			this.isStopped = true;
-			LOGGER.info("Stopping Server.");
-			
-			try {
-				serverSocket.close();
-			} catch (IOException e) {
-				LOGGER.severe("Cannot close ServerSocket" + e.getMessage());
-
-			}
-		}
-
-
-
+	private synchronized boolean isStopped() {
+		return this.isStopped;
 
 	}
+
+	public synchronized void stop(){
+		this.isStopped = true;
+		LOGGER.info("Stopping Server.");
+
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			LOGGER.severe("Cannot close ServerSocket" + e.getMessage());
+
+		}
+
+	}
+
+}
 
