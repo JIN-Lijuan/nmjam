@@ -11,14 +11,8 @@ public class MainServer {
 	public static void main(String[] args) {
 		
 		NetworkService networkService;
-		try {
-			networkService = new NetworkService(9998, 1);
-			networkService.run();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-		}
+		networkService = new NetworkService(9998, 1);
+		networkService.run();
 		
 		
 		
