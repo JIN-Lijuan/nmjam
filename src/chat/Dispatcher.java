@@ -7,30 +7,29 @@ import java.util.ArrayList;
 
 
 public class Dispatcher extends Thread {
-	public ArrayList<Socket> clientsSockets;
-	public ArrayList<String> messageQueue;
+	public ArrayList<ClientInfo> clientsInfo;
+	
 	
 	public Dispatcher(){
-		this.clientsSockets = new ArrayList<Socket>();
-		this.messageQueue = new ArrayList<String>();
+		this.clientsInfo = new ArrayList<ClientInfo>();
 		
 	}
 	
-	public synchronized void addClient(Socket new_client){
-		this.clientsSockets.add(new_client);
+	public synchronized void addClient(ClientInfo new_client){
+		this.clientsInfo.add(new_client);
 		
 	}
 	
 	public synchronized void removeClient(Socket client){
-		this.clientsSockets.remove(client);
+		this.clientsInfo.remove(client);
 		
 	}
 	
 	public synchronized void send_message(String message){
-		for( Socket s : clientsSockets){
+		for( ClientInfo c : this.clientsInfo){
 			try {
 				DataOutputStream out =  
-						new DataOutputStream(s.getOutputStream());
+						new DataOutputStream(c.getSocket().getOutputStream());
 				out.writeBytes(message);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

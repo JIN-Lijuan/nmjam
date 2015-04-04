@@ -2,27 +2,41 @@ package chat;
 
 import java.net.Socket;
 
+/**
+ * Basic information for a client.
+ *  
+ */
 public class ClientInfo {
-	protected String nickname;
-	protected Socket socket;
+	private Socket clientSocket;
+	private static int ID;
+	private String username;
 	
-	public ClientInfo(Socket socket) {
-		super();
-
-		this.socket = socket;
+	public ClientInfo(Socket clientSocket) {
+		this.clientSocket = clientSocket;
+		ID++;
+		this.username =  "guest"+ID;
+	
 	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
+	
 	public Socket getSocket() {
-		return socket;
+		return clientSocket;
 	}
+
+	public int getID() {
+		return ID;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	
+	
+	
 	
 	
 }

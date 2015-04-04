@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -26,6 +27,8 @@ class NetworkService implements Runnable {
 
 	//TODO: empecher le bloque du port
 	public NetworkService(int port, int poolSize){
+		
+		
 		this.isStopped = false;
 		this.port = port;
 		//TODO: Déplacer l'init hors du constructeur
@@ -55,13 +58,17 @@ class NetworkService implements Runnable {
 						" on port " +
 						serverSocket.getLocalPort());
 
-				dispatcher.addClient(cl);
 				pool.execute(new EchoThread(cl, dispatcher));
 				LOGGER.finest("Thread added to ThreadPool");
 
 			}
 		} catch (IOException e) {
 			pool.shutdown();
+			try {
+				serverSocket.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			LOGGER.severe("Cannot accept connection" + e.getMessage());
 		}
 	}
