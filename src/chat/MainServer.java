@@ -11,7 +11,7 @@ public class MainServer {
 	public static void main(String[] args) {
 
 		NetworkService networkService;
-		networkService = new NetworkService(9990, 1);
+		networkService = new NetworkService(9990, 10);
 		networkService.run();
 		
 		

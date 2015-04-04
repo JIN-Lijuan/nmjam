@@ -8,24 +8,32 @@ import java.util.ArrayList;
 
 public class Dispatcher extends Thread {
 	public ArrayList<ClientInfo> clientsInfo;
+	public SessionInfo sessionInfo;
 	
 	
 	public Dispatcher(){
 		this.clientsInfo = new ArrayList<ClientInfo>();
-		
+		this.sessionInfo = new SessionInfo();
 	}
 	
 	public synchronized void addClient(ClientInfo new_client){
+		this.sessionInfo.addUser();
 		this.clientsInfo.add(new_client);
 		
 	}
 	
-	public synchronized void removeClient(Socket client){
-		this.clientsInfo.remove(client);
+	public synchronized SessionInfo getSessionInfo(){
+		return this.sessionInfo;
 		
 	}
 	
-	public synchronized void send_message(String message){
+	public synchronized void removeClient(ClientInfo client){
+		this.clientsInfo.remove(client);
+		this.sessionInfo.removeUser();
+		
+	}
+	
+	public synchronized void broadcast(String message){
 		for( ClientInfo c : this.clientsInfo){
 			try {
 				DataOutputStream out =  
